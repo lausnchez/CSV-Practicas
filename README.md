@@ -6,3 +6,4 @@
 - **Opción 4.** Mostrar las personas de una ciudad dada
 - **Opción 5.** Mostrar las personas de una ciudad dada y menores a una edad dada
 - **Opción 6.** Modificar la ciudad o la edad de una persona que hayamos buscado
+- **Opción 7.** Borrado físico de una persona
