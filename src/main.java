@@ -9,7 +9,7 @@ public class main {
 
 	static Scanner scan = new Scanner(System.in);
 	final static File fichero = new File("src/ficheros/fichero.csv");
-	final static int LARGO_CADENAS = 10;
+
 	
 	public static void main(String[] args) {
 		menu();
@@ -51,15 +51,22 @@ public class main {
 	
 	// FUNCIONES DE AGREGAR -------------------------------------------------------------------
 	
+	/**
+	 * 
+	 */
 	private static void agregarPersona() {
 		try {
 			RandomAccessFile file = new RandomAccessFile(fichero, "rw");
 			file.seek(file.length());
 			// NOMBRE DE LA PERSONA
-			int numCaracteres = 0;
-			scan.nextLine();
-			System.out.println("   * Nombre: ");
-			String nombre = scan.nextLine();
+			String nombre = "";
+			boolean valido = false;
+			while(valido == false) {
+				scan.nextLine();
+				System.out.println("   * Nombre: ");
+				nombre = scan.nextLine();
+				valido = comprobarNombreValido(nombre);
+			}
 			// CIUDAD DE LA PERSONA
 			System.out.println("   * Ciudad: ");
 			String ciudad = scan.nextLine();
@@ -79,14 +86,15 @@ public class main {
 			file.writeInt(edad);
 			file.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	private static void agregarVariasPersonas(){
 		try {
 			RandomAccessFile file = new RandomAccessFile(fichero, "rw");
@@ -100,10 +108,8 @@ public class main {
 			}
 			file.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.err.println("No se encuentra el fichero");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
@@ -115,6 +121,9 @@ public class main {
 		System.out.println(" - Edad: " + edad);
 	}
 	
+	/**
+	 * 
+	 */
 	private static void mostrarTodo() {
 		try {
 			RandomAccessFile file = new RandomAccessFile(fichero, "r");
@@ -145,14 +154,15 @@ public class main {
 			}	
 			file.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private static void mostrarPorCiudad() {
 		try {
 			RandomAccessFile file = new RandomAccessFile(fichero, "r");
@@ -195,14 +205,15 @@ public class main {
 
 			file.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	private static void mostrarPorCiudadYEdad() {
 		try {
 			RandomAccessFile file = new RandomAccessFile(fichero, "r");
@@ -247,11 +258,38 @@ public class main {
 
 			file.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	
+	/**
+	 * Función que nos comprueba que el nombre de la persona, es decir, nuestra clave,
+	 * no esté repetido.
+	 * Recorremos el file entero cogiendo línea a línea, y extraemos la parte 
+	 * correspondiente al nombre. Comparamos, y en caso de que haya una coincidencia
+	 * devuelve true; en caso negativo devuelve false.
+	 * @param nombre
+	 * @return true si hay una coincidencia, false si no
+	 */
+	private static boolean comprobarNombreValido(String nombre) {
+		boolean valido = false;
+		try {
+			RandomAccessFile file = new RandomAccessFile(fichero, "r");
+			file.seek(0);
+			while(file.getFilePointer() < file.length()) {				
+				String linea = file.readLine();
+				String resultado = linea.substring(0, linea.indexOf(';'));
+				if(resultado.equals(nombre)) valido = true;
+			}
+			file.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return valido;
 	}
 }
